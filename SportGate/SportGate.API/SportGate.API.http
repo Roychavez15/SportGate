@@ -1,0 +1,6 @@
+@SportGate.API_HostAddress = http://localhost:5104
+
+GET {{SportGate.API_HostAddress}}/Tickets/
+Accept: application/json
+
+###
