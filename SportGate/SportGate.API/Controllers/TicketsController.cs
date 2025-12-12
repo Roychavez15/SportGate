@@ -61,6 +61,48 @@
         }
 
         // ---------------------------------------
+        // VALIDAR TICKET (GET)
+        // ejemplo:
+        // GET /api/Tickets/validate?code=WE5CNU
+        // ---------------------------------------
+        [HttpGet("validate")]
+        public async Task<IActionResult> ValidateTicketGet([FromQuery] string code)
+        {
+            if (string.IsNullOrWhiteSpace(code))
+                return BadRequest("Code is required.");
+
+            var ticket = await _db.Tickets
+                .Include(x => x.EntryTypePrice)
+                .FirstOrDefaultAsync(x => x.ShortCode == code);
+
+            if (ticket == null)
+                return BadRequest("Ticket not found");
+
+            // validar por día (solo válido el día actual)
+            if (ticket.CreatedAt.Date != DateTime.Now.Date)
+                return BadRequest("Ticket expired (not from today)");
+
+            // registrar uso
+            var usage = new TicketUsage
+            {
+                TicketId = ticket.Id,
+                UsedAt = DateTime.Now
+            };
+
+            _db.TicketUsages.Add(usage);
+            await _db.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = "Ticket valid",
+                ticket.ShortCode,
+                UsedAt = usage.UsedAt,
+                EntryType = ticket.EntryTypePrice.Description,
+                ticket.PeopleCount
+            });
+        }
+
+        // ---------------------------------------
         // Validar Ticket
         // ---------------------------------------
         [HttpPost("validate")]
