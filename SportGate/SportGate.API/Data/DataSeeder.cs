@@ -15,30 +15,41 @@
                     {
                         Code = "PEATONAL",
                         Description = "Entrada Peatonal",
-                        Price = 0.50m
+                        BaseFee = 0.50m,
+                        AllowMultiplePeople = false
                     },
                     new EntryTypePrice
                     {
                         Code = "AUTO",
                         Description = "Ingreso de Auto",
-                        Price = 1.00m
+                        BaseFee = 1.00m,
+                        AllowMultiplePeople = true
                     },
                     new EntryTypePrice
                     {
                         Code = "MOTO",
                         Description = "Ingreso de Moto",
-                        Price = 0.50m
+                        BaseFee = 0.50m,
+                        AllowMultiplePeople = true
                     },
                     new EntryTypePrice
                     {
                         Code = "VIP",
                         Description = "Invitado Especial / VIP",
-                        Price = 0.00m
+                        BaseFee = 0.00m,
+                        AllowMultiplePeople = false
                     }
                 );
-
-                db.SaveChanges();
             }
+            if (!db.PersonCategoryPrices.Any())
+            {
+                db.PersonCategoryPrices.AddRange(
+                    new PersonCategoryPrice { Code = "ADULTO", Description = "Adulto", Price = 0.50m },
+                    new PersonCategoryPrice { Code = "NIÑO", Description = "Niño", Price = 0.25m },
+                    new PersonCategoryPrice { Code = "TERCERA_EDAD", Description = "Tercera edad", Price = 0.25m }
+                );
+            }
+            db.SaveChanges();
         }
     }
 }

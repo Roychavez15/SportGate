@@ -10,6 +10,7 @@
         }
 
         public DbSet<EntryTypePrice> EntryTypePrices { get; set; }
+        public DbSet<PersonCategoryPrice> PersonCategoryPrices { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<TicketUsage> TicketUsages { get; set; }
 

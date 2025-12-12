@@ -4,5 +4,6 @@
     {
         public int EntryTypePriceId { get; set; }
         public int PeopleCount { get; set; }
+        public List<PersonCategoryRequest> People { get; set; }
     }
 }

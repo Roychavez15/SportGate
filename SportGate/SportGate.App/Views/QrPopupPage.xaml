@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui;assembly=ZXing.Net.MAUI"
+             x:Class="SportGate.App.Views.QrPopupPage"
+             Title="QrPopupPage">
+    <Frame Padding="20" VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="White" CornerRadius="12">
+        <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
+            <Label Text="Ticket generado" FontAttributes="Bold" />
+            <zxing:BarcodeWriterView x:Name="BarcodeView" WidthRequest="250" HeightRequest="250" />
+            <Button Text="Cerrar" Clicked="Close_Clicked" />
+        </VerticalStackLayout>
+    </Frame>
+</ContentPage>

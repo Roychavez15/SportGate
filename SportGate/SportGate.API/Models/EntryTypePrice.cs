@@ -12,7 +12,11 @@ namespace SportGate.API.Models
         [Required]
         public string Description { get; set; }
 
-        [Required]
-        public decimal Price { get; set; }
+        public decimal BaseFee { get; set; } = 0;
+        public bool RequiresBaseFee { get; set; } = false;
+
+        public bool AllowMultiplePeople { get; set; } = false;
+
+        public bool IsActive { get; set; } = true;
     }
 }

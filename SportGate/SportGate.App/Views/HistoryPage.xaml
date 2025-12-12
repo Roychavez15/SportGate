@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SportGate.App.Views.HistoryPage"
+             Title="HistoryPage">
+    <CollectionView ItemsSource="{Binding Tickets}" SelectionMode="Single" SelectionChanged="TicketsList_SelectionChanged">
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+                <Frame Padding="10" Margin="6" HasShadow="True">
+                    <StackLayout>
+                        <Label Text="{Binding Token}" FontAttributes="Bold" />
+                        <Label Text="{Binding CreatedAt}" />
+                        <Label Text="{Binding Amount, StringFormat='Total: {0:C}'}" />
+                    </StackLayout>
+                </Frame>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+</ContentPage>

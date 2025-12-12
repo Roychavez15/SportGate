@@ -24,9 +24,30 @@
         [HttpPost("create")]
         public async Task<IActionResult> CreateTicket(CreateTicketRequest req)
         {
-            var price = await _db.EntryTypePrices.FindAsync(req.EntryTypePriceId);
-            if (price == null)
+            var type = await _db.EntryTypePrices.FindAsync(req.EntryTypePriceId);
+            if (type == null)
                 return BadRequest("Invalid EntryTypePriceId");
+
+            if (!type.AllowMultiplePeople && req.People.Sum(p => p.Quantity) != 1)
+                return BadRequest("This entry type only allows exactly 1 person");
+
+            decimal total = 0;
+
+            // 1. Si tiene tarifa base (Auto, Moto, etc.)
+            if (type.RequiresBaseFee)
+                total += type.BaseFee;
+
+            // 2. Personas individuales con categorías
+            foreach (var p in req.People)
+            {
+                var cat = await _db.PersonCategoryPrices
+                    .FirstOrDefaultAsync(x => x.Id == p.PersonCategoryId);
+
+                if (cat == null)
+                    return BadRequest($"Category {p.PersonCategoryId} not found");
+
+                total += cat.Price * p.Quantity;
+            }
 
             // generar codigo corto único
             string code;
@@ -36,12 +57,12 @@
             }
             while (await _db.Tickets.AnyAsync(x => x.ShortCode == code));
 
-            var total = price.Price * req.PeopleCount;
+            //var total = price.Price * req.PeopleCount;
 
             var ticket = new Ticket
             {
                 ShortCode = code,
-                EntryTypePriceId = price.Id,
+                EntryTypePriceId = type.Id,
                 PeopleCount = req.PeopleCount,
                 TotalAmount = total,
                 CreatedAt = DateTime.Now
@@ -56,7 +77,7 @@
                 ticket.ShortCode,
                 ticket.TotalAmount,
                 ticket.PeopleCount,
-                EntryType = price.Description
+                EntryType = type.Description
             });
         }
 
