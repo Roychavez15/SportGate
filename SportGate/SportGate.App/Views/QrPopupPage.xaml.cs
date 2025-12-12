@@ -1,13 +1,13 @@
+using SportGate.App.Helpers;
+
 namespace SportGate.App.Views;
 
 public partial class QrPopupPage : ContentPage
 {
-    public QrPopupPage(string payload, string base64Png)
+    public QrPopupPage(string qrText)
     {
         InitializeComponent();
-        BarcodeView.BarcodeFormat = ZXing.BarcodeFormat.QR_CODE;
-        BarcodeView.Options = new ZXing.Common.EncodingOptions { Height = 250, Width = 250, Margin = 0 };
-        BarcodeView.BarcodeValue = payload;
+        QrImage.Source = QrCodeHelper.GenerateQr(qrText);
     }
 
     private async void Close_Clicked(object sender, EventArgs e)

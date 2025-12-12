@@ -54,6 +54,8 @@ namespace SportGate.App
             builder.Services.AddTransient<HistoryPage>();
             builder.Services.AddTransient<QrPopupPage>();
 
+            builder.Services.AddSingleton<INavigationService, NavigationService>();
+
             return builder.Build();
         }
     }

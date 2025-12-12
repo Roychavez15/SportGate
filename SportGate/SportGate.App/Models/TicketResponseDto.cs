@@ -9,7 +9,7 @@ namespace SportGate.App.Models
     public class TicketResponseDto
     {
         public Guid Id { get; set; }
-        public string Token { get; set; } = string.Empty;
+        public string ShortCode { get; set; } = string.Empty;
         public string QrBase64Png { get; set; } = string.Empty;
         public string QrPayload { get; set; } = string.Empty;
         public decimal Amount { get; set; }

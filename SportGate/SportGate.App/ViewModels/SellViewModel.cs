@@ -14,6 +14,7 @@ namespace SportGate.App.ViewModels
     public class SellViewModel : BaseViewModel
     {
         private readonly ApiService _api;
+        private readonly INavigationService _nav;
 
         public ObservableCollection<EntryTypePrice> EntryTypes { get; } = new();
         public ObservableCollection<PersonCategoryPrice> Categories { get; } = new();
@@ -37,9 +38,11 @@ namespace SportGate.App.ViewModels
 
         public DelegateCommand GenerateTicketCommand { get; }
 
-        public SellViewModel(ApiService api)
+        public SellViewModel(ApiService api, INavigationService navigation)
         {
             _api = api;
+            _nav = navigation;
+
             GenerateTicketCommand = new DelegateCommand(async _ => await GenerateTicketAsync());
         }
 
@@ -100,11 +103,12 @@ namespace SportGate.App.ViewModels
             }
 
             var res = await _api.CreateTicketAsync(req);
-            if (res != null)
-            {
-                // raise event or navigate to popup: simplest is to store last ticket
-                LastCreatedTicket = res;
-            }
+            if (res == null) return;
+
+            LastCreatedTicket = res;
+
+            // ⬇️ Aquí navegamos usando MVVM
+            await _nav.NavigateToQrPopup(res.ShortCode);
         }
 
         private TicketResponseDto? _lastCreated;

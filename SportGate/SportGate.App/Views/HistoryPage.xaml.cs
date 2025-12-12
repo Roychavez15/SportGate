@@ -24,7 +24,7 @@ public partial class HistoryPage : ContentPage
     {
         var sel = e.CurrentSelection.FirstOrDefault() as TicketResponseDto;
         if (sel == null) return;
-        var page = new QrPopupPage(sel.QrPayload, sel.QrBase64Png);
+        var page = new QrPopupPage(sel.ShortCode);
         await Navigation.PushModalAsync(page);
     }
 }
