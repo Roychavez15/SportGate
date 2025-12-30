@@ -1,5 +1,6 @@
 ﻿namespace SportGate.API.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using SportGate.API.Data;
@@ -22,6 +23,7 @@
         // Crear Ticket
         // ---------------------------------------
         [HttpPost("create")]
+        [Authorize(Policy = "AdministradorOrUsuario")]
         public async Task<IActionResult> CreateTicket(CreateTicketRequest req)
         {
             var type = await _db.EntryTypePrices.FindAsync(req.EntryTypePriceId);

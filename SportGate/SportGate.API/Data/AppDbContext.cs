@@ -13,11 +13,16 @@
         public DbSet<PersonCategoryPrice> PersonCategoryPrices { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<TicketUsage> TicketUsages { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Ticket>()
                 .HasIndex(x => x.ShortCode)
+                .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .HasIndex(x => x.Username)
                 .IsUnique();
         }
     }

@@ -1,5 +1,6 @@
 ﻿namespace SportGate.API.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using SportGate.API.Data;
@@ -7,6 +8,7 @@
 
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Policy = "AdministradorOnly")]
     public class EntryTypePriceController : ControllerBase
     {
         private readonly AppDbContext _db;
