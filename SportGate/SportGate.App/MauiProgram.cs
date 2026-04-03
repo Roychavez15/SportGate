@@ -1,29 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
-
-namespace SportGate.App
+﻿namespace SportGate.App
 {
-    //    public static class MauiProgram
-    //    {
-    //        public static MauiApp CreateMauiApp()
-    //        {
-    //            var builder = MauiApp.CreateBuilder();
-    //            builder
-    //                .UseMauiApp<App>()
-    //                .ConfigureFonts(fonts =>
-    //                {
-    //                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-    //                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-    //                });
 
-    //#if DEBUG
-    //    		builder.Logging.AddDebug();
-    //#endif
-
-    //            return builder.Build();
-    //        }
-    //    }
-    using Microsoft.Maui.Hosting;
     using CommunityToolkit.Maui;
+    using Microsoft.Maui.Hosting;
+
     using SportGate.App.Services;
     using SportGate.App.ViewModels;
     using SportGate.App.Views;
@@ -39,7 +19,7 @@ namespace SportGate.App
             .ConfigureFonts(fonts => { });
 
             // Configura base URL aquí (cambia por tu endpoint)
-            string apiBase = "https://tu-backend.example.com";
+            string apiBase = "http://181.39.104.93:5021";
 
             builder.Services.AddSingleton(new ApiService(apiBase));
 
@@ -55,7 +35,13 @@ namespace SportGate.App
             builder.Services.AddTransient<QrPopupPage>();
 
             builder.Services.AddSingleton<INavigationService, NavigationService>();
+            builder.Services.AddSingleton<IDialogService, DialogService>();
 
+#if ANDROID
+            builder.Services.AddSingleton<IPrinterService>(sp =>
+                new SportGate.App.Platforms.Android.BluetoothPrinterService(
+                    "DC:0D:30:DE:4F:98"));
+            #endif
             return builder.Build();
         }
     }

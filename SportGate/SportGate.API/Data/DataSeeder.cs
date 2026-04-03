@@ -16,28 +16,32 @@
                         Code = "PEATONAL",
                         Description = "Entrada Peatonal",
                         BaseFee = 0.50m,
-                        AllowMultiplePeople = false
+                        AllowMultiplePeople = false,
+                        RequiresBaseFee = false,
                     },
                     new EntryTypePrice
                     {
                         Code = "AUTO",
                         Description = "Ingreso de Auto",
                         BaseFee = 1.00m,
-                        AllowMultiplePeople = true
+                        AllowMultiplePeople = true,
+                        RequiresBaseFee = true
                     },
                     new EntryTypePrice
                     {
                         Code = "MOTO",
                         Description = "Ingreso de Moto",
                         BaseFee = 0.50m,
-                        AllowMultiplePeople = true
+                        AllowMultiplePeople = true,
+                        RequiresBaseFee= true
                     },
                     new EntryTypePrice
                     {
                         Code = "VIP",
                         Description = "Invitado Especial / VIP",
                         BaseFee = 0.00m,
-                        AllowMultiplePeople = false
+                        AllowMultiplePeople = false,
+                        RequiresBaseFee= false
                     }
                 );
             }

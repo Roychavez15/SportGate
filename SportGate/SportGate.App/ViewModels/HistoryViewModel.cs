@@ -17,7 +17,12 @@ namespace SportGate.App.ViewModels
         public ObservableCollection<TicketResponseDto> Tickets { get; } = new();
 
         public DelegateCommand RefreshCommand { get; }
-
+        private decimal _dayTotal;
+        public decimal DayTotal
+        {
+            get => _dayTotal;
+            set => Set(ref _dayTotal, value);
+        }
         public HistoryViewModel(ApiService api)
         {
             _api = api;
@@ -28,7 +33,8 @@ namespace SportGate.App.ViewModels
         {
             var list = await _api.GetTodayTicketsAsync();
             Tickets.Clear();
-            foreach (var t in list.OrderByDescending(x => x.CreatedAt)) Tickets.Add(t);
+            foreach (var t in list.OrderByDescending(x => x.Id)) Tickets.Add(t);
+            DayTotal = Tickets.Sum(x => x.TotalAmount);
         }
     }
 }

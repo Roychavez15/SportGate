@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace SportGate.App.ViewModels
 {
+
     using SportGate.App.Helpers;
     using SportGate.App.Models;
     using SportGate.App.Services;
@@ -15,6 +16,8 @@ namespace SportGate.App.ViewModels
     {
         private readonly ApiService _api;
         private readonly INavigationService _nav;
+        private readonly IPrinterService _printerService;
+        private readonly IDialogService _dialogService;
 
         public ObservableCollection<EntryTypePrice> EntryTypes { get; } = new();
         public ObservableCollection<PersonCategoryPrice> Categories { get; } = new();
@@ -38,11 +41,12 @@ namespace SportGate.App.ViewModels
 
         public DelegateCommand GenerateTicketCommand { get; }
 
-        public SellViewModel(ApiService api, INavigationService navigation)
+        public SellViewModel(ApiService api, INavigationService navigation, IPrinterService printerService, IDialogService dialogService)
         {
             _api = api;
             _nav = navigation;
-
+            _printerService = printerService;
+            _dialogService = dialogService;
             GenerateTicketCommand = new DelegateCommand(async _ => await GenerateTicketAsync());
         }
 
@@ -95,20 +99,52 @@ namespace SportGate.App.ViewModels
                 if (sum != 1) { /* show error via UI binding */ return; }
             }
 
-            var req = new CreateTicketRequest { EntryTypeCode = SelectedType.Code };
+            var req = new CreateTicketRequest { entryTypePriceId = SelectedType.Id };
+            var peoplecount = 0;
             foreach (var kv in SelectedCounts)
             {
                 if (kv.Value <= 0) continue;
                 req.People.Add(new CreateTicketPersonDto { PersonCategoryId = kv.Key, Quantity = kv.Value });
+                peoplecount += kv.Value;
             }
-
+            req.PeopleCount = peoplecount;
             var res = await _api.CreateTicketAsync(req);
             if (res == null) return;
 
             LastCreatedTicket = res;
 
+            try
+            {
+                await _printerService.PrintTicketAsync(res);
+            }
+            catch(Exception ex)
+            {
+                await _dialogService.ShowErrorAsync(
+                    "Error de impresión",
+                    "No se pudo imprimir el ticket.\n" +
+                    "Verifique que la impresora esté encendida y conectada."
+                );
+            }
             // ⬇️ Aquí navegamos usando MVVM
             await _nav.NavigateToQrPopup(res.ShortCode);
+            
+
+        }
+        public void Reset()
+        {
+            // Reset selección
+            SelectedType = null;
+
+            // Reset conteos
+            SelectedCounts.Clear();
+            foreach (var c in Categories)
+                SelectedCounts[c.Id] = 0;
+
+            // Reset total
+            Total = 0;
+
+            // Reset último ticket
+            LastCreatedTicket = null;
         }
 
         private TicketResponseDto? _lastCreated;

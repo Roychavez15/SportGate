@@ -12,10 +12,12 @@ namespace SportGate.App.Services
     public class ApiService
     {
         private readonly HttpClient _http;
+        private readonly string _baseUrl;
 
         public ApiService(string baseUrl)
         {
-            _http = new HttpClient { BaseAddress = new Uri(baseUrl) };
+            _http = new HttpClient ();
+            _baseUrl = baseUrl;
         }
 
         public async Task<List<EntryTypePrice>> GetEntryTypesAsync()
@@ -26,7 +28,7 @@ namespace SportGate.App.Services
 
         public async Task<TicketResponseDto?> CreateTicketAsync(CreateTicketRequest req)
         {
-            var r = await _http.PostAsJsonAsync("/api/Tickets/create", req);
+            var r = await _http.PostAsJsonAsync($"{_baseUrl}/api/Tickets/create", req);
             if (!r.IsSuccessStatusCode) return null;
             return await r.Content.ReadFromJsonAsync<TicketResponseDto>();
         }
@@ -38,11 +40,12 @@ namespace SportGate.App.Services
         {
             try
             {
-                var r = await _http.GetAsync(url);
+                var urlsend = $"{_baseUrl}{url}";
+                var r = await _http.GetAsync(urlsend);
                 if (!r.IsSuccessStatusCode) return default;
                 return await r.Content.ReadFromJsonAsync<T>() ?? default!;
             }
-            catch
+            catch(Exception ex)
             {
                 return default!;
             }

@@ -77,7 +77,8 @@
                 ticket.ShortCode,
                 ticket.TotalAmount,
                 ticket.PeopleCount,
-                EntryType = type.Description
+                EntryType = type.Description,
+                ticket.CreatedAt
             });
         }
 
@@ -158,6 +159,20 @@
                 EntryType = ticket.EntryTypePrice.Description,
                 ticket.PeopleCount
             });
+        }
+        [HttpGet("today")]
+        public async Task<IActionResult> TodayAsync()
+        {
+            var today = DateTime.Today;              // 00:00 de hoy
+            var tomorrow = today.AddDays(1);         // 00:00 de mañana
+
+            var list = await _db.Tickets
+                .Include(x => x.EntryTypePrice)
+                .Where(t => t.CreatedAt >= today && t.CreatedAt < tomorrow)
+                .OrderByDescending(t => t.CreatedAt)
+                .ToListAsync();
+
+            return Ok(list);
         }
     }
 }

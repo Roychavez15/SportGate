@@ -8,8 +8,9 @@ namespace SportGate.App.Models
 {
     public class CreateTicketRequest
     {
-        public string EntryTypeCode { get; set; } = string.Empty;
+        public int entryTypePriceId { get; set; }
         public List<CreateTicketPersonDto> People { get; set; } = new();
-        public bool IncludeQrAsBase64 { get; set; } = true;
+        public int PeopleCount { get; set; }
+        //public bool IncludeQrAsBase64 { get; set; } = true;
     }
 }

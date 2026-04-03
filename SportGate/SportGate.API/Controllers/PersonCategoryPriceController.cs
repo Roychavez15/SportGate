@@ -7,11 +7,11 @@
 
     [ApiController]
     [Route("api/[controller]")]
-    public class EntryTypePriceController : ControllerBase
+    public class PersonCategoryPriceController : ControllerBase
     {
         private readonly AppDbContext _db;
 
-        public EntryTypePriceController(AppDbContext db)
+        public PersonCategoryPriceController(AppDbContext db)
         {
             _db = db;
         }
@@ -22,7 +22,7 @@
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var list = await _db.EntryTypePrices
+            var list = await _db.PersonCategoryPrices
                 .OrderBy(x => x.Description)
                 .ToListAsync();
 
@@ -35,7 +35,7 @@
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var item = await _db.EntryTypePrices.FindAsync(id);
+            var item = await _db.PersonCategoryPrices.FindAsync(id);
 
             if (item == null)
                 return NotFound("EntryTypePrice not found.");
@@ -47,23 +47,20 @@
         // Crear
         // ---------------------------------------
         [HttpPost]
-        public async Task<IActionResult> Create(EntryTypePrice req)
+        public async Task<IActionResult> Create(PersonCategoryPrice req)
         {
             // Validar código único
-            if (await _db.EntryTypePrices.AnyAsync(x => x.Code == req.Code))
+            if (await _db.PersonCategoryPrices.AnyAsync(x => x.Code == req.Code))
                 return BadRequest("Code must be unique.");
 
-            var entity = new EntryTypePrice
+            var entity = new PersonCategoryPrice
             {
                 Code = req.Code,
                 Description = req.Description,
-                BaseFee = req.BaseFee,
-                RequiresBaseFee = req.RequiresBaseFee,
-                AllowMultiplePeople = req.AllowMultiplePeople,
-                IsActive = req.IsActive,
+                Price = req.Price,
             };
 
-            _db.EntryTypePrices.Add(entity);
+            _db.PersonCategoryPrices.Add(entity);
             await _db.SaveChangesAsync();
 
             return Ok(entity);
@@ -73,23 +70,20 @@
         // Actualizar
         // ---------------------------------------
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, EntryTypePrice req)
+        public async Task<IActionResult> Update(int id, PersonCategoryPrice req)
         {
-            var entity = await _db.EntryTypePrices.FindAsync(id);
+            var entity = await _db.PersonCategoryPrices.FindAsync(id);
 
             if (entity == null)
-                return NotFound("EntryTypePrice not found.");
+                return NotFound("PersonCategoryPrice not found.");
 
             // Validar código único en otros registros
-            if (await _db.EntryTypePrices.AnyAsync(x => x.Code == req.Code && x.Id != id))
+            if (await _db.PersonCategoryPrices.AnyAsync(x => x.Code == req.Code && x.Id != id))
                 return BadRequest("Code must be unique.");
 
             entity.Code = req.Code;
             entity.Description = req.Description;
-            entity.BaseFee = req.BaseFee;
-            entity.AllowMultiplePeople = req.AllowMultiplePeople;
-            entity.IsActive = req.IsActive;
-            entity.RequiresBaseFee = req.RequiresBaseFee;
+            entity.Price = req.Price;
             await _db.SaveChangesAsync();
 
             return Ok(entity);
@@ -101,12 +95,12 @@
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var entity = await _db.EntryTypePrices.FindAsync(id);
+            var entity = await _db.PersonCategoryPrices.FindAsync(id);
 
             if (entity == null)
-                return NotFound("EntryTypePrice not found.");
+                return NotFound("PersonCategoryPrice not found.");
 
-            _db.EntryTypePrices.Remove(entity);
+            _db.PersonCategoryPrices.Remove(entity);
             await _db.SaveChangesAsync();
 
             return Ok(new { message = "Deleted successfully." });

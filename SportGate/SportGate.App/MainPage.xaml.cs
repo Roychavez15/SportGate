@@ -1,6 +1,6 @@
 ﻿namespace SportGate.App
 {
-    public partial class MainPage : TabbedPage
+    public partial class MainPage : ContentPage
     {
         private int count = 0;
 

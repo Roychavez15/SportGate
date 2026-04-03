@@ -8,11 +8,12 @@ namespace SportGate.App.Models
 {
     public class TicketResponseDto
     {
-        public Guid Id { get; set; }
-        public string ShortCode { get; set; } = string.Empty;
-        public string QrBase64Png { get; set; } = string.Empty;
-        public string QrPayload { get; set; } = string.Empty;
-        public decimal Amount { get; set; }
+        public int Id { get; set; }
+        public string ShortCode { get; set; }
+        public decimal TotalAmount { get; set; }
+        public int PeopleCount { get; set; }
+        public EntryTypePrice entryTypePrice { get; set; } = new EntryTypePrice();
         public DateTime CreatedAt { get; set; }
+        public string EntryType { get; set; }
     }
 }
